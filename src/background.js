@@ -147,6 +147,10 @@ Common Languages: languages spoken.
 Past or Current Educational Majors: field of study.
     `
 
+    const classes = information_classes.split('\n').map(line => line.split(': ')[0]);
+
+    const class_info = [[0.58, 0.03], [0.51, 0.03], [0.53, 0.14], [0.58, 0.17], [0.38, 0.07], [0.52, 0.19], [0.43, 0.01], [0.38, 0.03], [0.48, 0.07], [0.53, 0.0], [0.76, 0.03], [0.74, 0.0], [0.61, 0.14], [0.6, 0.0], [0.41, 0.0], [0.26, 0.0], [0.28, 0.0], [0.76, 0.02], [0.73, 0.01], [0.76, 0.02], [0.77, 0.01], [0.5, 0.05], [0.58, 0.05], [0.39, 0.02], [0.39, 0.02], [0.38, 0.01], [0.45, 0.08], [0.28, 0.08], [0.29, 0.11], [0.25, 0.08], [0.33, 0.07], [0.75, 0.19], [0.64, 0.14], [0.82, 0.21], [0.35, 0.04], [0.7, 0.17], [0.54, 0.11], [0.36, 0.04], [0.31, 0.0], [0.44, 0.1], [0.23, 0.0], [0.56, 0.12], [0.46, 0.0], [0.41, 0.0], [0.1, 0.0], [0.32, 0.0], [0.31, 0.0], [0.21, 0.0], [0.35, 0.0], [0.22, 0.04], [0.18, 0.03], [0.18, 0.03], [0.12, 0.0], [0.14, 0.0], [0.11, 0.0], [0.11, 0.0], [0.11, 0.0], [0.16, 0.0], [0.22, 0.0], [0.47, 0.04], [0.29, 0.0], [0.41, 0.0], [0.29, 0.0], [0.29, 0.0], [0.33, 0.0], [0.27, 0.0], [0.28, 0.0], [0.53, 0.03], [0.22, 0.0], [0.36, 0.0], [0.29, 0.0], [0.55, 0.0], [0.75, 0.02], [0.42, 0.0], [0.25, 0.0], [0.24, 0.0], [0.2, 0.0], [0.2, 0.0], [0.32, 0.0], [0.3, 0.0], [0.3, 0.0], [0.59, 0.06], [0.47, 0.06], [0.5, 0.07], [0.4, 0.09], [0.54, 0.11], [0.56, 0.11], [0.29, 0.01], [0.26, 0.0], [0.17, 0.0], [0.33, 0.0], [0.13, 0.0], [0.29, 0.01], [0.23, 0.0], [0.29, 0.02], [0.28, 0.01], [0.33, 0.04], [0.26, 0.0], [0.21, 0.0], [0.21, 0.0], [0.25, 0.03], [0.18, 0.0], [0.51, 0.22], [0.62, 0.22]];
+
     const prompt_anonymization = `Please act as an expert adn analyze the private information in the below paragraph. I'll give you an example first.
 
 [Information Classes]
@@ -219,16 +223,22 @@ John identifies as (heterosexual)[Sexual Orientation], has been (married since 2
         }
     }
 
-    const pt = pseudonymizeText(inputText, results);
+    const pt = pseudonymizeText(inputText, results, classes, class_info);
     console.log('Pseudonymized text:', pt);
     console.log(inputText);
     console.log(results);
     return pt;
 }
 
-function pseudonymizeText(text, sensitiveInfo) {
+function pseudonymizeText(text, sensitiveInfo, classes, class_info) {
+
     sensitiveInfo.forEach(info => {
-        text = text.replace(new RegExp(info.value, 'g'), `[${info.type}]`);
+        if (classes.includes(info.type)) {
+            const index = classes.indexOf(info.type);
+            const [priv, util] = class_info[index];
+            const replacement = `[${info.type}]`;
+            text = text.replace(new RegExp(info.value, 'g'), replacement);
+        }
     });
     return text;
 }
