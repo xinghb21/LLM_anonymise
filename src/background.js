@@ -40,9 +40,7 @@ async function anonymizeText(inputText) {
     const apiKey = "02427719893b42868f349a4668288963";
     const deploymentId = "gpt-4o";
 
-    const prompt_anonymization = `Please act as an expert adn analyze the private information in the below paragraph. I'll give you an example first.
-
-[Information Classes]
+    const information_classes = `
 Name: the name of some person.
 Birthday: the birthday of some person.
 Age: number of years lived.
@@ -147,7 +145,12 @@ Religious Belief: faith or religion.
 Undisclosed Criminal Records: hidden criminal history.
 Common Languages: languages spoken.
 Past or Current Educational Majors: field of study.
-`;
+    `
+
+    const prompt_anonymization = `Please act as an expert adn analyze the private information in the below paragraph. I'll give you an example first.
+
+[Information Classes]
+` + information_classes;
 
 const example = `[Example]
 [Example input]
