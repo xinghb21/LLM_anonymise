@@ -28,14 +28,24 @@ for student in students:
         if util[i] == '':
             util[i] = 0
         if len(privacy) < num_classes:
-            privacy.append(float(priv[i]) / num_classes)
-            utility.append(float(util[i]) / num_classes)
+            privacy.append(float(priv[i]) / num_students)
+            utility.append(float(util[i]) / num_students)
         else:
-            privacy[i] += float(priv[i]) / num_classes
-            utility[i] += float(util[i]) / num_classes
+            privacy[i] += float(priv[i]) / num_students
+            utility[i] += float(util[i]) / num_students
 
 privacy = [round(i, 2) for i in privacy]
 utility = [round(i, 2) for i in utility]
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.array(privacy)
+y = np.array(utility)
+
+plt.figure()
+plt.scatter(x, y)
+plt.show()
 
 with open('./result.txt', 'w') as f:
     data = []
