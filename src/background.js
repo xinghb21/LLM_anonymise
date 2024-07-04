@@ -14,26 +14,48 @@ function getTabId(callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       callback(tabs[0].id);
     });
-  }
+}
 
+// 在chrome.runtime.onMessage.addListener中接收并存储mode
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.mode) {
+        console.log('Received mode:', request.mode);
+        // 存储mode到chrome.storage
+        chrome.storage.sync.set({ selectMode: request.mode }, function() {
+            console.log('Mode is stored in chrome.storage:', request.mode);
+        });
+    }
+    sendResponse({ status: 'Mode received' });
+});
+
+// 在chrome.contextMenus.onClicked中获取存储的mode并传递给脚本
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === "anonymize-text") {
       let selectedText = info.selectionText || " ";
       console.log("Executing script with selected text:", selectedText);
       getTabId((tabId) => {
         chrome.scripting.executeScript({
-          target: { tabId: tabId },
-          files: ["dist/script.bundle.js"]
+            target: { tabId: tabId },
+            files: ["dist/script.bundle.js"]
         }).then(() => {
-          console.log("Injected script file");
-          chrome.tabs.sendMessage(tab.id, { action: 'showFloatingBox', selectedText: selectedText });
+            console.log("Injected script file");
+            // 获取存储的mode
+            chrome.storage.sync.get(['selectMode'], function(result) {
+                console.log('mode:', result.selectMode);
+                if (chrome.runtime.lastError) {
+                    console.error('Error retrieving mode:', chrome.runtime.lastError);
+                } else {
+                    console.log("Injected script file");
+                    // 传递mode给脚本
+                    chrome.tabs.sendMessage(tab.id, { action: 'showFloatingBox', selectedText: selectedText, mode: (result.selectMode || "None") });
+                }
+            });
         }).catch((err) => {
-          console.error("Failed to inject script:", err);
+            console.error("Failed to inject script:", err);
         });
       });
     }
 });
-
 
 async function anonymizeText(inputText) {
     const resourceName = "shuningz";

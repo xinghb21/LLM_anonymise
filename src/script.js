@@ -4,141 +4,346 @@ function getSelectionCoordinates() {
     const range = selection.getRangeAt(0).cloneRange();
     const rect = range.getBoundingClientRect();
     return rect;
-  }
+}
   
   // 创建悬浮框
-  // 创建悬浮框
-function createFloatingBox(selectedText) {
-  const rect = getSelectionCoordinates();
+function createFloatingBox(selectedText, mode) {
+	const rect = getSelectionCoordinates();
 
-  // 创建悬浮框元素
-  const floatingBox = document.createElement('div');
-  floatingBox.style.position = 'absolute';
-  floatingBox.style.top = `${rect.top + window.scrollY}px`;
-  floatingBox.style.left = `${rect.left + window.scrollX}px`;
-  floatingBox.style.width = '300px';
-  floatingBox.style.padding = '10px';
-  floatingBox.style.backgroundColor = 'white';
-  floatingBox.style.border = '1px solid #ccc';
-  floatingBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
-  floatingBox.style.zIndex = '10000';
-  floatingBox.style.borderRadius = '10px';
-  floatingBox.style.color = 'black';  // 设置字体颜色为黑色
+	// 创建悬浮框元素
+	const floatingBox = document.createElement('div');
+	floatingBox.style.position = 'absolute';
+	floatingBox.style.top = `${rect.top + window.scrollY}px`;
+	floatingBox.style.left = `${rect.left + window.scrollX}px`;
+	floatingBox.style.width = '300px';
+	floatingBox.style.padding = '10px';
+	floatingBox.style.backgroundColor = 'white';
+	floatingBox.style.border = '1px solid #ccc';
+	floatingBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+	floatingBox.style.zIndex = '10000';
+	floatingBox.style.borderRadius = '10px';
+	floatingBox.style.color = 'black';  // 设置字体颜色为黑色
 
-  floatingBox.innerHTML = `
-      <div>
-          <button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
-          <textarea id="editingBox" style="width: 100%; height: 100px; margin-top: 20px;">${selectedText}</textarea>
-          <label for="quadrantController" style="margin-top: 10px;">选择匿名性和可用性指标:</label>
-          <div style="position: relative; width: 260px; height: 260px; margin-top: 10px;">
-              <canvas id="quadrantController" width="200" height="200" style="background-color: #f0f0f0; position: absolute; left: 30px; top: 30px"></canvas>
-              <div style="position: absolute; left: 50%; transform: translateX(-50%);">Privacy</div>
-              <div style="position: absolute; top: 50%; transform: translateY(-50%) rotate(-90deg);">Utility</div>
-          </div>
-          <button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
-          <div id="statusBox" style="margin-top: 10px;"></div>
-          <div id="resultBox" style="margin-top: 10px; white-space: pre-wrap;"></div>
-      </div>
-  `;
+	console.log('mode:', mode);
 
-  // 关闭按钮功能
-  floatingBox.querySelector('#closeButton').addEventListener('click', () => {
-      floatingBox.remove();
-  });
+	if (mode == 'Privacy & Utility') {
+		floatingBox.innerHTML = `
+			<div>
+				<button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
+				<label for="quadrantController" style="margin-top: 10px;">选择匿名性和可用性指标:</label>
+				<div style="position: relative; width: 240px; height: 260px; margin-top: 10px;">
+					<canvas id="quadrantController" width="200" height="200" style="background-color: #f0f0f0; position: absolute; left: 30px; top: 20px"></canvas>
+					<div style="position: absolute; left: 50%; transform: translateX(-50%);">Privacy</div>
+					<div style="position: absolute; top: 50%; transform: translateY(-50%) rotate(-90deg);">Utility</div>
+					<div id="coordinates" style="position: absolute; top: 90%; left: 50%; transform: translateX(-50%); color: black; text-align: center; width: 100%;"></div>
+				</div>
+				<button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
+				<div id="statusBox" style="margin-top: 10px;"></div>
+				<textarea id="resultBox" style="margin-top: 10px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; width: 100%; height: 150px; display: none"></textarea>
+				<button id="copyButton" style="margin-top: 10px; width: 100%; display: none">Copy</button>
+				<div id="copyMessage" style="margin-top: 10px; display: none; color: green; left: 40%">已复制到剪贴板</div>
+			</div>
+		`;
 
-  // 确认按钮功能
-  floatingBox.querySelector('#confirmButton').addEventListener('click', async () => {
-      const text = document.querySelector('#editingBox').value;
-      const progress1 = quadrantCoordinates.x;
-      const progress2 = quadrantCoordinates.y;
+		document.body.appendChild(floatingBox);
 
-      // 显示加密中状态
-      const statusBox = document.querySelector('#statusBox');
-      statusBox.textContent = '处理中...';
+		const canvas = document.getElementById('quadrantController');
+		const ctx = canvas.getContext('2d');
 
-      try {
-          const processed_data = await anonymizeText(progress1, progress2, text);
+		const radius = canvas.width;
+		const centerX = 0;
+		const centerY = canvas.height;
 
-          statusBox.textContent = '处理成功';
-          const resultBox = document.querySelector('#resultBox');
-          resultBox.textContent = processed_data;
-      } catch (error) {
-          console.error(error);
-          statusBox.textContent = '处理失败';
-      }
-  });
+		// 绘制1/4圆
+		ctx.beginPath();
+		ctx.moveTo(centerX, centerY);
+		ctx.arc(centerX, centerY, radius, 1.5 * Math.PI, 2 * Math.PI);
+		ctx.lineTo(centerX, centerY);
+		ctx.closePath();
+		ctx.fillStyle = '#ddd';
+		ctx.fill();
 
-  document.body.appendChild(floatingBox);
+		let quadrantCoordinates = { x: 50, y: 50 };
 
-  const canvas = document.getElementById('quadrantController');
-  const ctx = canvas.getContext('2d');
+		canvas.addEventListener('click', function(event) {
+			const rect = canvas.getBoundingClientRect();
+			const x = event.clientX - rect.left;
+			const y = event.clientY - rect.top;
+			const dx = x - centerX;
+			const dy = y - centerY;
+			const distance = Math.sqrt(dx * dx + dy * dy);
 
-  const radius = canvas.width;
-  const centerX = 0;
-  const centerY = canvas.height;
+			if (distance <= radius && x >= centerX && y <= centerY) {
+				quadrantCoordinates.x = ((x - centerX) / radius) * 100;
+				quadrantCoordinates.y = (1 - (y / radius)) * 100;
+				drawPoint(x, y);
+			}
+		});
 
-  // 绘制1/4圆
-  ctx.beginPath();
-  ctx.moveTo(centerX, centerY);
-  ctx.arc(centerX, centerY, radius, 1.5 * Math.PI, 2 * Math.PI);
-  ctx.lineTo(centerX, centerY);
-  ctx.closePath();
-  ctx.fillStyle = '#ddd';
-  ctx.fill();
+		function drawPoint(x, y) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  let quadrantCoordinates = { x: 50, y: 50 };
+			// 绘制1/4圆
+			ctx.beginPath();
+			ctx.moveTo(centerX, centerY);
+			ctx.arc(centerX, centerY, radius, 1.5 * Math.PI, 2 * Math.PI);
+			ctx.lineTo(centerX, centerY);
+			ctx.closePath();
+			ctx.fillStyle = '#ddd';
+			ctx.fill();
 
-  canvas.addEventListener('click', function(event) {
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const dx = x - centerX;
-      const dy = y - centerY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+			// 绘制点
+			ctx.beginPath();
+			ctx.arc(x, y, 5, 0, 2 * Math.PI);
+			ctx.fillStyle = '#000';
+			ctx.fill();
 
-      if (distance <= radius && x >= centerX && y <= centerY) {
-          quadrantCoordinates.x = ((x - centerX) / radius) * 100;
-          quadrantCoordinates.y = (1 - (y / radius)) * 100;
-          drawPoint(x, y);
-      }
-  });
+			// 显示选择的坐标和区间
+			const coordinatesDiv = document.getElementById('coordinates');
+			coordinatesDiv.textContent = `Privacy: ${quadrantCoordinates.x.toFixed(2)}%, Utility: ${quadrantCoordinates.y.toFixed(2)}%`;
+		}
 
-  function drawPoint(x, y) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+		// 关闭按钮功能
+		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
+			floatingBox.remove();
+		});
 
-      // 绘制1/4圆
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, radius, 1.5 * Math.PI, 2 * Math.PI);
-      ctx.lineTo(centerX, centerY);
-      ctx.closePath();
-      ctx.fillStyle = '#ddd';
-      ctx.fill();
+		// 确认按钮功能
+		floatingBox.querySelector('#confirmButton').addEventListener('click', async () => {
+			const text = selectedText;
+			const progress1 = quadrantCoordinates.x;
+			const progress2 = quadrantCoordinates.y;
 
-      // 绘制点
-      ctx.beginPath();
-      ctx.arc(x, y, 5, 0, 2 * Math.PI);
-      ctx.fillStyle = '#000';
-      ctx.fill();
-    }
-  }
-    
-  // 从背景脚本接收消息并显示悬浮框
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'showFloatingBox') {
-      createFloatingBox(request.selectedText);
-      sendResponse({status: 'success'});
-    }
-  });
+			// 显示加密中状态
+			const statusBox = document.querySelector('#statusBox');
+			statusBox.textContent = '处理中...';
 
-  // function anonymizeText(progress1, progress2, text) {console.log(progress1, progress2, text);}
+			try {
+				const processed_data = await anonymizeText(progress1, progress2, text);
 
-  async function anonymizeText(progress1, progress2, inputText) {
-    const resourceName = "shuningz";
-    const apiKey = "02427719893b42868f349a4668288963";
-    const deploymentId = "gpt-4o";
+				statusBox.textContent = '处理成功';
+				const resultBox = document.querySelector('#resultBox');
+				resultBox.value = processed_data;
+				resultBox.style.display = 'block';
+				const copyButton = document.querySelector('#copyButton');
+				copyButton.style.display = 'block';
+			} catch (error) {
+				console.error(error);
+				statusBox.textContent = '处理失败';
+			}
+		});
 
-    const information_classes = `
+		// 复制按钮功能
+		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
+			const resultBox = document.querySelector('#resultBox');
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(resultBox.value)
+				.then(() => {
+					console.log('文本已复制到剪贴板');
+					const copyMessage = document.querySelector('#copyMessage');
+					copyMessage.style.display = 'block';
+					setTimeout(() => {
+						copyMessage.style.display = 'none';
+					}, 2000); // 2秒后隐藏提示消息
+				})
+				.catch(err => {
+					console.error('复制文本失败:', err);
+				});
+			} else {
+				console.log('浏览器不支持剪贴板API');
+			}
+		});
+	} else if (mode == 'Privacy Only') {
+		floatingBox.innerHTML = `
+			<div>
+				<button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
+				<label for="progress1">Privacy:</label>
+        		<input type="range" id="progress1" value="50" max="100" style="width: 100%;">
+				<button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
+				<div id="statusBox" style="margin-top: 10px;"></div>
+				<textarea id="resultBox" style="margin-top: 10px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; width: 100%; height: 150px; display: none"></textarea>
+				<button id="copyButton" style="margin-top: 10px; width: 100%; display: none">Copy</button>
+				<div id="copyMessage" style="margin-top: 10px; display: none; color: green; left: 40%">已复制到剪贴板</div>
+			</div>
+		`;
+
+		document.body.appendChild(floatingBox);
+
+		// 关闭按钮功能
+		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
+			floatingBox.remove();
+		});
+
+		// 确认按钮功能
+		floatingBox.querySelector('#confirmButton').addEventListener('click', async () => {
+			const text = selectedText;
+			const progress1 = document.querySelector('#progress1').value;
+
+			// 显示加密中状态
+			const statusBox = document.querySelector('#statusBox');
+			statusBox.textContent = '处理中...';
+
+			try {
+				const processed_data = await anonymizeText(progress1, 100, text);
+
+				statusBox.textContent = '处理成功';
+				const resultBox = document.querySelector('#resultBox');
+				resultBox.value = processed_data;
+				resultBox.style.display = 'block';
+				const copyButton = document.querySelector('#copyButton');
+				copyButton.style.display = 'block';
+			} catch (error) {
+				console.error(error);
+				statusBox.textContent = '处理失败';
+			}
+		});
+
+		// 复制按钮功能
+		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
+			const resultBox = document.querySelector('#resultBox');
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(resultBox.value)
+				.then(() => {
+					console.log('文本已复制到剪贴板');
+					const copyMessage = document.querySelector('#copyMessage');
+					copyMessage.style.display = 'block';
+					setTimeout(() => {
+						copyMessage.style.display = 'none';
+					}, 2000); // 2秒后隐藏提示消息
+				})
+				.catch(err => {
+					console.error('复制文本失败:', err);
+				});
+			} else {
+				console.log('浏览器不支持剪贴板API');
+			}
+		});
+	} else if (mode == 'Utility Only') {
+		floatingBox.innerHTML = `
+			<div>
+				<button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
+				<label for="progress2">Utility:</label>
+        		<input type="range" id="progress2" value="50" max="100" style="width: 100%;">
+				<button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
+				<div id="statusBox" style="margin-top: 10px;"></div>
+				<textarea id="resultBox" style="margin-top: 10px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; width: 100%; height: 150px; display: none"></textarea>
+				<button id="copyButton" style="margin-top: 10px; width: 100%; display: none">Copy</button>
+				<div id="copyMessage" style="margin-top: 10px; display: none; color: green; left: 40%">已复制到剪贴板</div>
+			</div>
+		`;
+
+		document.body.appendChild(floatingBox);
+
+		// 关闭按钮功能
+		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
+			floatingBox.remove();
+		});
+
+		// 确认按钮功能
+		floatingBox.querySelector('#confirmButton').addEventListener('click', async () => {
+			const text = selectedText;
+			const progress2 = document.querySelector('#progress2').value;
+
+			// 显示加密中状态
+			const statusBox = document.querySelector('#statusBox');
+			statusBox.textContent = '处理中...';
+
+			try {
+				const processed_data = await anonymizeText(0, progress2, text);
+
+				statusBox.textContent = '处理成功';
+				const resultBox = document.querySelector('#resultBox');
+				resultBox.value = processed_data;
+				resultBox.style.display = 'block';
+				const copyButton = document.querySelector('#copyButton');
+				copyButton.style.display = 'block';
+			} catch (error) {
+				console.error(error);
+				statusBox.textContent = '处理失败';
+			}
+		});
+
+		// 复制按钮功能
+		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
+			const resultBox = document.querySelector('#resultBox');
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(resultBox.value)
+				.then(() => {
+					console.log('文本已复制到剪贴板');
+					const copyMessage = document.querySelector('#copyMessage');
+					copyMessage.style.display = 'block';
+					setTimeout(() => {
+						copyMessage.style.display = 'none';
+					}, 2000); // 2秒后隐藏提示消息
+				})
+				.catch(err => {
+					console.error('复制文本失败:', err);
+				});
+			} else {
+				console.log('浏览器不支持剪贴板API');
+			}
+		});
+	} else if (mode == 'None') {
+		floatingBox.innerHTML = `
+			<div>
+				<button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
+				<textarea id="resultBox" style="margin-top: 10px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; width: 100%; height: 150px;"></textarea>
+				<button id="copyButton" style="margin-top: 10px; width: 100%;">Copy</button>
+				<div id="copyMessage" style="margin-top: 10px; display: none; color: green; left: 40%">已复制到剪贴板</div>
+			</div>
+		`;
+
+		document.body.appendChild(floatingBox);
+
+		resultBox.value = selectedText;
+
+		// 关闭按钮功能
+		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
+			floatingBox.remove();
+		});
+
+		// 复制按钮功能
+		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
+			const resultBox = document.querySelector('#resultBox');
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(resultBox.value)
+				.then(() => {
+					console.log('文本已复制到剪贴板');
+					const copyMessage = document.querySelector('#copyMessage');
+					copyMessage.style.display = 'block';
+					setTimeout(() => {
+						copyMessage.style.display = 'none';
+					}, 2000); // 2秒后隐藏提示消息
+				})
+				.catch(err => {
+					console.error('复制文本失败:', err);
+				});
+			} else {
+				console.log('浏览器不支持剪贴板API');
+			}
+		});
+	} else {
+		console.log('Mode error!');
+	}
+
+}
+		
+	// 从背景脚本接收消息并显示悬浮框
+	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+		if (request.action === 'showFloatingBox') {
+			console.log('script mode:', request.mode);
+			createFloatingBox(request.selectedText, request.mode);
+			sendResponse({status: 'success'});
+		}
+	});
+
+  	// function anonymizeText(progress1, progress2, text) {console.log(progress1, progress2, text);}
+	async function anonymizeText(progress1, progress2, inputText) {
+		const resourceName = "shuningz";
+		const apiKey = "02427719893b42868f349a4668288963";
+		const deploymentId = "gpt-4o";
+
+		const information_classes = `
 Name: the name of some person.
 Birthday: the birthday of some person.
 Age: number of years lived.
@@ -343,12 +548,9 @@ John identifies as (heterosexual)[Sexual Orientation], has been (married since 2
 
   function pseudonymizeText(text, sensitiveInfo, classes, class_info, progress1, progress2) {
 
-    console.log('progress1:', progress1);
-    console.log('progress2:', progress2);
-      sensitiveInfo.forEach(info => {
-        console.log('info:', info.type);
+	sensitiveInfo.forEach(info => {
         const type = info.type.toLowerCase();
-          if (classes.includes(type)) {
+		if (classes.includes(type)) {
             const index = classes.indexOf(type);
             const [priv, util] = class_info[index];
             console.log(priv, util);
@@ -356,9 +558,8 @@ John identifies as (heterosexual)[Sexual Orientation], has been (married since 2
                 const replacement = `[${info.type}]`;
                 text = text.replace(new RegExp(info.value, 'g'), replacement);
             }
-          }
-      });
-
-      return text;
+		}
+	});
+	return text;
   }
   

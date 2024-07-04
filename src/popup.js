@@ -1,20 +1,32 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const slider = document.getElementById('privacySlider');
-    const sliderValue = document.getElementById('privacySliderValue');
-    const applyButton = document.getElementById('applyPrivacyButton');
-
-    slider.addEventListener('input', () => {
-        sliderValue.textContent = slider.value;
+document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.privacyButton');
+    
+    // Load the saved mode from storage
+    chrome.storage.sync.get(['selectedMode'], function(result) {
+        const savedMode = result.selectedMode || 'None';
+        buttons.forEach(button => {
+            if (button.textContent.trim() === savedMode) {
+                button.classList.add('selected');
+            }
+        });
     });
 
-    const { selectedText } = await chrome.storage.local.get('selectedText');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            
+            const selectedMode = button.textContent.trim();
+            
+            // Save the selected mode to storage
+            chrome.storage.sync.set({ selectedMode: selectedMode }, function() {
+                console.log('Mode saved:', selectedMode);
+            });
 
-    applyButton.addEventListener('click', async () => {
-        const level = slider.value;
-
-        chrome.runtime.sendMessage({ action: "anonymize", text: selectedText, level }, (response) => {
-            alert(response.result);
-            window.close();
+            // Send the selected mode to the background or script
+            chrome.runtime.sendMessage({ mode: selectedMode }, function(response) {
+                console.log('Mode sent to background:', selectedMode);
+            });
         });
     });
 });
