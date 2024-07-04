@@ -7,81 +7,122 @@ function getSelectionCoordinates() {
   }
   
   // 创建悬浮框
-  function createFloatingBox(selectedText) {
-    const rect = getSelectionCoordinates();
-  
-    // 创建悬浮框元素
-    const floatingBox = document.createElement('div');
-    floatingBox.style.position = 'absolute';
-    floatingBox.style.top = `${rect.top + window.scrollY}px`;
-    floatingBox.style.left = `${rect.left + window.scrollX}px`;
-    floatingBox.style.width = '300px';
-    floatingBox.style.padding = '10px';
-    floatingBox.style.backgroundColor = 'white';
-    floatingBox.style.border = '1px solid #ccc';
-    floatingBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
-    floatingBox.style.zIndex = '10000';
-    floatingBox.style.borderRadius = '10px';
-    floatingBox.style.color = 'black';  // 设置字体颜色为黑色
-  
-  //  // 确认按钮功能
-  //  floatingBox.querySelector('#confirmButton').addEventListener('click', () => {
-  //    const text = document.querySelector('#editingBox').value;
-  //    const progress1 = document.querySelector('#progress1').value;
-  //    const progress2 = document.querySelector('#progress2').value;
-  //    console.log(progress1, progress2, text);
-  //    const processed_data = anonymizeText(progress1, progress2, text);
-  //  });
+  // 创建悬浮框
+function createFloatingBox(selectedText) {
+  const rect = getSelectionCoordinates();
+
+  // 创建悬浮框元素
+  const floatingBox = document.createElement('div');
+  floatingBox.style.position = 'absolute';
+  floatingBox.style.top = `${rect.top + window.scrollY}px`;
+  floatingBox.style.left = `${rect.left + window.scrollX}px`;
+  floatingBox.style.width = '300px';
+  floatingBox.style.padding = '10px';
+  floatingBox.style.backgroundColor = 'white';
+  floatingBox.style.border = '1px solid #ccc';
+  floatingBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+  floatingBox.style.zIndex = '10000';
+  floatingBox.style.borderRadius = '10px';
+  floatingBox.style.color = 'black';  // 设置字体颜色为黑色
+
   floatingBox.innerHTML = `
-  <div>
-    <button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
-    <textarea id="editingBox" style="width: 100%; height: 100px; margin-top: 20px;">${selectedText}</textarea>
-    <label for="progress1">Progress 1:</label>
-    <input type="range" id="progress1" value="50" max="100" style="width: 100%;">
-    <label for="progress2" style="margin-top: 10px;">Progress 2:</label>
-    <input type="range" id="progress2" value="50" max="100" style="width: 100%;">
-    <button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
-    <div id="statusBox" style="margin-top: 10px;"></div>
-    <div id="resultBox" style="margin-top: 10px; white-space: pre-wrap;"></div>
-  </div>
+      <div>
+          <button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
+          <textarea id="editingBox" style="width: 100%; height: 100px; margin-top: 20px;">${selectedText}</textarea>
+          <label for="quadrantController" style="margin-top: 10px;">选择匿名性和可用性指标:</label>
+          <div style="position: relative; width: 260px; height: 260px; margin-top: 10px;">
+              <canvas id="quadrantController" width="200" height="200" style="background-color: #f0f0f0; position: absolute; left: 30px; top: 30px"></canvas>
+              <div style="position: absolute; left: 50%; transform: translateX(-50%);">Privacy</div>
+              <div style="position: absolute; top: 50%; transform: translateY(-50%) rotate(-90deg);">Utility</div>
+          </div>
+          <button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
+          <div id="statusBox" style="margin-top: 10px;"></div>
+          <div id="resultBox" style="margin-top: 10px; white-space: pre-wrap;"></div>
+      </div>
   `;
 
   // 关闭按钮功能
   floatingBox.querySelector('#closeButton').addEventListener('click', () => {
-    floatingBox.remove();
+      floatingBox.remove();
   });
 
   // 确认按钮功能
   floatingBox.querySelector('#confirmButton').addEventListener('click', async () => {
-    const text = document.querySelector('#editingBox').value;
-    const progress1 = document.querySelector('#progress1').value;
-    const progress2 = document.querySelector('#progress2').value;
-    
-    // 显示加密中状态
-    const statusBox = document.querySelector('#statusBox');
-    statusBox.textContent = '处理中...';
+      const text = document.querySelector('#editingBox').value;
+      const progress1 = quadrantCoordinates.x;
+      const progress2 = quadrantCoordinates.y;
 
-    try {
-      // 异步调用匿名化函数
-      const processed_data = await anonymizeText(progress1, progress2, text);
-      
-      // 显示加密成功状态
-      statusBox.textContent = '处理成功';
-      
-      // 显示匿名化后的文本
-      const resultBox = document.querySelector('#resultBox');
-      resultBox.textContent = processed_data;
-    } catch (error) {
-      // 处理错误并显示错误状态
-      console.error(error);
-      statusBox.textContent = '处理失败';
-    }
+      // 显示加密中状态
+      const statusBox = document.querySelector('#statusBox');
+      statusBox.textContent = '处理中...';
+
+      try {
+          const processed_data = await anonymizeText(progress1, progress2, text);
+
+          statusBox.textContent = '处理成功';
+          const resultBox = document.querySelector('#resultBox');
+          resultBox.textContent = processed_data;
+      } catch (error) {
+          console.error(error);
+          statusBox.textContent = '处理失败';
+      }
   });
 
-    // 添加悬浮框到文档
-    document.body.appendChild(floatingBox);
+  document.body.appendChild(floatingBox);
+
+  const canvas = document.getElementById('quadrantController');
+  const ctx = canvas.getContext('2d');
+
+  const radius = canvas.width;
+  const centerX = 0;
+  const centerY = canvas.height;
+
+  // 绘制1/4圆
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.arc(centerX, centerY, radius, 1.5 * Math.PI, 2 * Math.PI);
+  ctx.lineTo(centerX, centerY);
+  ctx.closePath();
+  ctx.fillStyle = '#ddd';
+  ctx.fill();
+
+  let quadrantCoordinates = { x: 50, y: 50 };
+
+  canvas.addEventListener('click', function(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const dx = x - centerX;
+      const dy = y - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance <= radius && x >= centerX && y <= centerY) {
+          quadrantCoordinates.x = ((x - centerX) / radius) * 100;
+          quadrantCoordinates.y = (1 - (y / radius)) * 100;
+          drawPoint(x, y);
+      }
+  });
+
+  function drawPoint(x, y) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 绘制1/4圆
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, 1.5 * Math.PI, 2 * Math.PI);
+      ctx.lineTo(centerX, centerY);
+      ctx.closePath();
+      ctx.fillStyle = '#ddd';
+      ctx.fill();
+
+      // 绘制点
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = '#000';
+      ctx.fill();
+    }
   }
-  
+    
   // 从背景脚本接收消息并显示悬浮框
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'showFloatingBox') {
@@ -209,7 +250,7 @@ Past or Current Educational Majors: field of study.
         classes[i] = classes[i].toLowerCase()
     }
 
-    const class_info = [[2.31, 0.12], [2.04, 0.12], [2.12, 0.58], [2.31, 0.69], [1.54, 0.27], [2.08, 0.77], [1.73, 0.04], [1.54, 0.12], [1.92, 0.27], [2.12, 0.0], [3.04, 0.12], [2.96, 0.0], [2.42, 0.58], [2.38, 0.0], [1.65, 0.0], [1.04, 0.0], [1.12, 0.0], [3.04, 0.08], [2.92, 0.04], [3.04, 0.08], [3.08, 0.04], [2.0, 0.19], [2.31, 0.19], [1.58, 0.08], [1.58, 0.08], [1.5, 0.04], [1.81, 0.31], [1.12, 0.31], [1.15, 0.42], [1.0, 0.31], [1.31, 0.27], [3.0, 0.77], [2.58, 0.58], [3.27, 0.85], [1.38, 0.15], [2.81, 0.69], [2.15, 0.42], [1.42, 0.15], [1.23, 0.0], [1.77, 0.38], [0.92, 0.0], [2.23, 0.5], [1.85, 0.0], [1.65, 0.0], [0.38, 0.0], [1.27, 0.0], [1.23, 0.0], [0.85, 0.0], [1.38, 0.0], [0.88, 0.15], [0.73, 0.12], [0.73, 0.12], [0.46, 0.0], [0.58, 0.0], [0.42, 0.0], [0.42, 0.0], [0.42, 0.0], [0.65, 0.0], [0.88, 0.0], [1.88, 0.15], [1.15, 0.0], [1.65, 0.0], [1.15, 0.0], [1.15, 0.0], [1.31, 0.0], [1.08, 0.0], [1.12, 0.0], [2.12, 0.12], [0.88, 0.0], [1.42, 0.0], [1.15, 0.0], [2.19, 0.0], [3.0, 0.08], [1.69, 0.0], [1.0, 0.0], [0.96, 0.0], [0.81, 0.0], [0.81, 0.0], [1.27, 0.0], [1.19, 0.0], [1.19, 0.0], [2.35, 0.23], [1.88, 0.23], [2.0, 0.27], [1.62, 0.35], [2.15, 0.42], [2.23, 0.42], [1.15, 0.04], [1.04, 0.0], [0.69, 0.0], [1.31, 0.0], [0.54, 0.0], [1.15, 0.04], [0.92, 0.0], [1.15, 0.08], [1.12, 0.04], [1.31, 0.15], [1.04, 0.0], [0.85, 0.0], [0.85, 0.0], [1.0, 0.12], [0.73, 0.0], [2.04, 0.88], [2.46, 0.88]];
+    const class_info = [[4.0, 0.43], [3.69, 0.43], [3.73, 2.29], [3.27, 2.57], [2.54, 1.14], [2.81, 2.86], [3.62, 0.43], [3.62, 1.71], [4.54, 1.14], [5.92, 0.0], [5.54, 0.43], [4.54, 0.0], [3.69, 2.14], [6.23, 0.0], [6.0, 0.0], [5.5, 0.0], [5.65, 0.0], [4.54, 0.29], [4.46, 0.14], [5.15, 0.29], [5.19, 0.14], [3.08, 0.86], [5.19, 1.14], [3.46, 0.43], [3.46, 0.29], [3.54, 0.14], [5.15, 1.14], [5.23, 1.14], [5.38, 1.57], [5.38, 1.14], [5.15, 1.0], [4.15, 2.86], [4.15, 2.43], [4.65, 3.43], [4.04, 0.71], [4.58, 4.29], [4.42, 3.29], [5.35, 1.14], [5.35, 1.0], [4.96, 2.71], [4.85, 0.43], [5.04, 3.0], [6.04, 0.14], [6.04, 0.14], [5.96, 0.0], [5.62, 0.57], [5.12, 0.43], [5.38, 0.43], [5.69, 0.71], [6.04, 0.57], [6.12, 0.43], [5.38, 0.43], [5.04, 0.43], [4.77, 0.57], [5.77, 0.29], [5.65, 0.29], [5.85, 0.29], [5.77, 0.29], [5.85, 0.29], [6.15, 0.57], [6.38, 0.0], [6.35, 0.0], [6.35, 0.0], [6.35, 0.0], [6.0, 0.0], [5.85, 0.0], [5.62, 0.0], [5.42, 0.43], [5.15, 0.57], [4.88, 0.0], [5.5, 0.71], [5.46, 0.71], [5.35, 1.0], [5.27, 0.29], [5.58, 0.29], [5.31, 0.29], [4.85, 0.29], [4.85, 0.29], [5.73, 0.71], [5.27, 0.57], [5.31, 0.71], [5.77, 0.86], [5.62, 1.14], [4.88, 1.0], [4.54, 1.71], [5.35, 1.57], [5.31, 1.57], [3.96, 0.57], [3.88, 0.43], [4.42, 0.29], [5.58, 0.14], [4.96, 0.0], [3.38, 0.14], [3.0, 0.14], [3.0, 0.57], [2.92, 0.71], [2.92, 0.86], [3.12, 0.29], [3.92, 0.86], [4.08, 1.0], [3.42, 1.86], [5.15, 1.29], [2.58, 4.29], [3.15, 3.43]];
 
     const prompt_anonymization = `Please act as an expert adn analyze the private information in the below paragraph. I'll give you an example first. The information class MUST be selected from the given list.
 
@@ -311,7 +352,7 @@ John identifies as (heterosexual)[Sexual Orientation], has been (married since 2
             const index = classes.indexOf(type);
             const [priv, util] = class_info[index];
             console.log(priv, util);
-            if (priv > progress1 && util > progress2) {
+            if (priv * 100 > progress1 * 7 && util * 100 < progress2 * 7) {
                 const replacement = `[${info.type}]`;
                 text = text.replace(new RegExp(info.value, 'g'), replacement);
             }
