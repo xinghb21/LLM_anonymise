@@ -7,7 +7,7 @@ function getSelectionCoordinates() {
 }
   
   // 创建悬浮框
-function createFloatingBox(selectedText, mode) {
+function createFloatingBox(selectedText, mode, tabUrl) {
 	const rect = getSelectionCoordinates();
 
 	// 创建悬浮框元素
@@ -322,20 +322,93 @@ function createFloatingBox(selectedText, mode) {
 				console.log('浏览器不支持剪贴板API');
 			}
 		});
+	} else if (mode == 'DP Baseline') {
+		floatingBox.innerHTML = `
+			<div>
+				<button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
+				<textarea id="contentBox" style="margin-top: 10px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; width: 100%; height: 150px;"></textarea>
+				<button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
+				<div id="statusBox" style="margin-top: 10px;"></div>
+				<textarea id="resultBox" style="margin-top: 10px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; width: 100%; height: 150px; display: none"></textarea>
+				<button id="copyButton" style="margin-top: 10px; width: 100%; display: none">Copy</button>
+				<div id="copyMessage" style="margin-top: 10px; display: none; color: green; left: 40%">已复制到剪贴板</div>
+			</div>
+		`;
+
+		document.body.appendChild(floatingBox);
+
+		contentBox.value = selectedText;
+
+		// 关闭按钮功能
+		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
+			floatingBox.remove();
+		});
+
+		// 确认按钮功能
+		floatingBox.querySelector('#confirmButton').addEventListener('click', async () => {
+			const text = selectedText;
+
+			// 显示加密中状态
+			const statusBox = document.querySelector('#statusBox');
+			statusBox.textContent = '处理中...';
+
+			const origin = tabUrl.origin;
+
+			chrome.runtime.sendMessage({
+				type: 'fetchData',
+				data: selectedText,
+				origin: origin
+			}, (response) => {
+				if (response.success) {
+					console.log('Data fetched successfully:', response.data);
+					console.log('Anonymized text:', response.data['anonymized_text']);
+					const processed_data = response.data['anonymized_text'];
+					statusBox.textContent = '处理成功';
+					const resultBox = document.querySelector('#resultBox');
+					resultBox.value = processed_data;
+					resultBox.style.display = 'block';
+					const copyButton = document.querySelector('#copyButton');
+				copyButton.style.display = 'block';
+				} else {
+					console.error('Error fetching data:', response.error);
+					statusBox.textContent = '处理失败';
+				}
+			});
+		});
+
+		// 复制按钮功能
+		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
+			const resultBox = document.querySelector('#resultBox');
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(resultBox.value)
+				.then(() => {
+					console.log('文本已复制到剪贴板');
+					const copyMessage = document.querySelector('#copyMessage');
+					copyMessage.style.display = 'block';
+					setTimeout(() => {
+						copyMessage.style.display = 'none';
+					}, 2000); // 2秒后隐藏提示消息
+				})
+				.catch(err => {
+					console.error('复制文本失败:', err);
+				});
+			} else {
+				console.log('浏览器不支持剪贴板API');
+			}
+		});
 	} else {
 		console.log('Mode error!');
 	}
-
 }
 		
-	// 从背景脚本接收消息并显示悬浮框
-	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-		if (request.action === 'showFloatingBox') {
-			console.log('script mode:', request.mode);
-			createFloatingBox(request.selectedText, request.mode);
-			sendResponse({status: 'success'});
-		}
-	});
+// 从背景脚本接收消息并显示悬浮框
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	if (request.action === 'showFloatingBox') {
+		console.log('script mode:', request.mode);
+		createFloatingBox(request.selectedText, request.mode, request.tabUrl);
+		sendResponse({status: 'success'});
+	}
+});
 
   	// function anonymizeText(progress1, progress2, text) {console.log(progress1, progress2, text);}
 	async function anonymizeText(progress1, progress2, inputText) {

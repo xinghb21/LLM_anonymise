@@ -23,8 +23,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.mode) {
         console.log('Received mode:', request.mode);
         mode = request.mode;
+        sendResponse({ status: 'Mode received' });
     }
-    sendResponse({ status: 'Mode received' });
 });
 
 let scriptInjected = false;
@@ -34,6 +34,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         let selectedText = info.selectionText || " ";
         console.log("Executing script with selected text:", selectedText);
         getTabId((tabId) => {
+            let currentTabUrl = tab.url;
             if (!scriptInjected) {
                 chrome.scripting.executeScript({
                     target: { tabId: tabId },
@@ -41,21 +42,52 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 }).then(() => {
                     console.log("Injected script file");
                     scriptInjected = true;
-                    sendMessageToTab(tab.id, selectedText);
+                    sendMessageToTab(tab.id, selectedText, currentTabUrl);
                 }).catch((err) => {
                     console.error("Failed to inject script:", err);
                 });
             } else {
-                sendMessageToTab(tab.id, selectedText);
+                sendMessageToTab(tab.id, selectedText, currentTabUrl);
             }
         });
     }
 });
 
-function sendMessageToTab(tabId, selectedText) {
+function sendMessageToTab(tabId, selectedText, tabUrl) {
     console.log('mode:', mode);
-    chrome.tabs.sendMessage(tabId, { action: 'showFloatingBox', selectedText: selectedText, mode: mode });
+    chrome.tabs.sendMessage(tabId, { action: 'showFloatingBox', selectedText: selectedText, mode: mode, tabUrl: tabUrl });
 }
+
+// background.js
+
+chrome.runtime.onInstalled.addListener(() => {
+    console.log('Extension installed');
+  });
+  
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'fetchData') {
+        const url = 'http://43.153.182.221:5001/anonymize';
+        const params = new URLSearchParams({ data: message.data });
+
+        fetch(`${url}?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Origin': message.origin,
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            sendResponse({ success: true, data: data });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            sendResponse({ success: false, error: error });
+        });
+
+        return true;
+    }
+});
+  
 
 async function anonymizeText(inputText) {
     const resourceName = "shuningz";

@@ -3,7 +3,12 @@
   "name": "Privacy Control with OpenAI",
   "version": "1.0",
   "description": "Anonymize text using OpenAI.",
-  "permissions": ["storage", "activeTab", "contextMenus", "scripting"],
+  "permissions": [
+    "storage", 
+    "activeTab", 
+    "contextMenus", 
+    "scripting"
+  ],
   "background": {
     "service_worker": "dist/background.bundle.js"
   },
