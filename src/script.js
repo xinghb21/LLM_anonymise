@@ -1,17 +1,24 @@
 // 获取选中的文字的范围和位置信息
 function getSelectionCoordinates() {
-    const selection = window.getSelection();
-    const range = selection.getRangeAt(0).cloneRange();
-    const rect = range.getBoundingClientRect();
-    return rect;
+	const selection = window.getSelection();
+	const range = selection.getRangeAt(0).cloneRange();
+	const rect = range.getBoundingClientRect();
+	return rect;
 }
-  
-  // 创建悬浮框
+
+// 创建悬浮框
 function createFloatingBox(selectedText, mode, tabUrl) {
+
+	const existingBox = document.querySelector('.floatingBox');
+	if (existingBox) {
+		existingBox.remove();
+	}
+
 	const rect = getSelectionCoordinates();
 
 	// 创建悬浮框元素
 	const floatingBox = document.createElement('div');
+	floatingBox.classList.add('floatingBox');
 	floatingBox.style.position = 'absolute';
 	floatingBox.style.top = `${rect.top + window.scrollY}px`;
 	floatingBox.style.left = `${rect.left + window.scrollX}px`;
@@ -65,7 +72,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 
 		let quadrantCoordinates = { x: 50, y: 50 };
 
-		canvas.addEventListener('click', function(event) {
+		canvas.addEventListener('click', function (event) {
 			const rect = canvas.getBoundingClientRect();
 			const x = event.clientX - rect.left;
 			const y = event.clientY - rect.top;
@@ -138,17 +145,79 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			const resultBox = document.querySelector('#resultBox');
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
-				.then(() => {
-					console.log('文本已复制到剪贴板');
-					const copyMessage = document.querySelector('#copyMessage');
-					copyMessage.style.display = 'block';
-					setTimeout(() => {
-						copyMessage.style.display = 'none';
-					}, 2000); // 2秒后隐藏提示消息
-				})
-				.catch(err => {
-					console.error('复制文本失败:', err);
-				});
+					.then(() => {
+						console.log('文本已复制到剪贴板');
+						const copyMessage = document.querySelector('#copyMessage');
+						copyMessage.style.display = 'block';
+						setTimeout(() => {
+							copyMessage.style.display = 'none';
+						}, 2000); // 2秒后隐藏提示消息
+					})
+					.catch(err => {
+						console.error('复制文本失败:', err);
+					});
+			} else {
+				console.log('浏览器不支持剪贴板API');
+			}
+		});
+	} else if (mode == 'Automatic') {
+		floatingBox.innerHTML = `
+			<div>
+				<button id="closeButton" style="position: absolute; top: 5px; right: 5px; background-color: transparent; border: none; color: #333; font-size: 16px;">&times;</button>
+				<button id="confirmButton" style="margin-top: 10px; width: 100%;">Confirm</button>
+				<div id="statusBox" style="margin-top: 10px;"></div>
+				<textarea id="resultBox" style="margin-top: 10px; max-height: 180px; overflow-y: auto; white-space: pre-wrap; width: 100%; height: 150px; display: none"></textarea>
+				<button id="copyButton" style="margin-top: 10px; width: 100%; display: none">Copy</button>
+				<div id="copyMessage" style="margin-top: 10px; display: none; color: green; left: 40%">已复制到剪贴板</div>
+			</div>
+		`;
+
+		document.body.appendChild(floatingBox);
+
+		// 关闭按钮功能
+		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
+			floatingBox.remove();
+		});
+
+		// 确认按钮功能
+		floatingBox.querySelector('#confirmButton').addEventListener('click', async () => {
+			const text = selectedText;
+
+			// 显示加密中状态
+			const statusBox = document.querySelector('#statusBox');
+			statusBox.textContent = '处理中...';
+
+			try {
+				const processed_data = await anonymizeText(0, 100, text);
+
+				statusBox.textContent = '处理成功';
+				const resultBox = document.querySelector('#resultBox');
+				resultBox.value = processed_data;
+				resultBox.style.display = 'block';
+				const copyButton = document.querySelector('#copyButton');
+				copyButton.style.display = 'block';
+			} catch (error) {
+				console.error(error);
+				statusBox.textContent = '处理失败';
+			}
+		});
+
+		// 复制按钮功能
+		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
+			const resultBox = document.querySelector('#resultBox');
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(resultBox.value)
+					.then(() => {
+						console.log('文本已复制到剪贴板');
+						const copyMessage = document.querySelector('#copyMessage');
+						copyMessage.style.display = 'block';
+						setTimeout(() => {
+							copyMessage.style.display = 'none';
+						}, 2000); // 2秒后隐藏提示消息
+					})
+					.catch(err => {
+						console.error('复制文本失败:', err);
+					});
 			} else {
 				console.log('浏览器不支持剪贴板API');
 			}
@@ -203,17 +272,17 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			const resultBox = document.querySelector('#resultBox');
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
-				.then(() => {
-					console.log('文本已复制到剪贴板');
-					const copyMessage = document.querySelector('#copyMessage');
-					copyMessage.style.display = 'block';
-					setTimeout(() => {
-						copyMessage.style.display = 'none';
-					}, 2000); // 2秒后隐藏提示消息
-				})
-				.catch(err => {
-					console.error('复制文本失败:', err);
-				});
+					.then(() => {
+						console.log('文本已复制到剪贴板');
+						const copyMessage = document.querySelector('#copyMessage');
+						copyMessage.style.display = 'block';
+						setTimeout(() => {
+							copyMessage.style.display = 'none';
+						}, 2000); // 2秒后隐藏提示消息
+					})
+					.catch(err => {
+						console.error('复制文本失败:', err);
+					});
 			} else {
 				console.log('浏览器不支持剪贴板API');
 			}
@@ -268,17 +337,17 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			const resultBox = document.querySelector('#resultBox');
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
-				.then(() => {
-					console.log('文本已复制到剪贴板');
-					const copyMessage = document.querySelector('#copyMessage');
-					copyMessage.style.display = 'block';
-					setTimeout(() => {
-						copyMessage.style.display = 'none';
-					}, 2000); // 2秒后隐藏提示消息
-				})
-				.catch(err => {
-					console.error('复制文本失败:', err);
-				});
+					.then(() => {
+						console.log('文本已复制到剪贴板');
+						const copyMessage = document.querySelector('#copyMessage');
+						copyMessage.style.display = 'block';
+						setTimeout(() => {
+							copyMessage.style.display = 'none';
+						}, 2000); // 2秒后隐藏提示消息
+					})
+					.catch(err => {
+						console.error('复制文本失败:', err);
+					});
 			} else {
 				console.log('浏览器不支持剪贴板API');
 			}
@@ -307,17 +376,17 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			const resultBox = document.querySelector('#resultBox');
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
-				.then(() => {
-					console.log('文本已复制到剪贴板');
-					const copyMessage = document.querySelector('#copyMessage');
-					copyMessage.style.display = 'block';
-					setTimeout(() => {
-						copyMessage.style.display = 'none';
-					}, 2000); // 2秒后隐藏提示消息
-				})
-				.catch(err => {
-					console.error('复制文本失败:', err);
-				});
+					.then(() => {
+						console.log('文本已复制到剪贴板');
+						const copyMessage = document.querySelector('#copyMessage');
+						copyMessage.style.display = 'block';
+						setTimeout(() => {
+							copyMessage.style.display = 'none';
+						}, 2000); // 2秒后隐藏提示消息
+					})
+					.catch(err => {
+						console.error('复制文本失败:', err);
+					});
 			} else {
 				console.log('浏览器不支持剪贴板API');
 			}
@@ -368,7 +437,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 					resultBox.value = processed_data;
 					resultBox.style.display = 'block';
 					const copyButton = document.querySelector('#copyButton');
-				copyButton.style.display = 'block';
+					copyButton.style.display = 'block';
 				} else {
 					console.error('Error fetching data:', response.error);
 					statusBox.textContent = '处理失败';
@@ -381,17 +450,17 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			const resultBox = document.querySelector('#resultBox');
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
-				.then(() => {
-					console.log('文本已复制到剪贴板');
-					const copyMessage = document.querySelector('#copyMessage');
-					copyMessage.style.display = 'block';
-					setTimeout(() => {
-						copyMessage.style.display = 'none';
-					}, 2000); // 2秒后隐藏提示消息
-				})
-				.catch(err => {
-					console.error('复制文本失败:', err);
-				});
+					.then(() => {
+						console.log('文本已复制到剪贴板');
+						const copyMessage = document.querySelector('#copyMessage');
+						copyMessage.style.display = 'block';
+						setTimeout(() => {
+							copyMessage.style.display = 'none';
+						}, 2000); // 2秒后隐藏提示消息
+					})
+					.catch(err => {
+						console.error('复制文本失败:', err);
+					});
 			} else {
 				console.log('浏览器不支持剪贴板API');
 			}
@@ -400,23 +469,23 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		console.log('Mode error!');
 	}
 }
-		
+
 // 从背景脚本接收消息并显示悬浮框
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.action === 'showFloatingBox') {
 		console.log('script mode:', request.mode);
 		createFloatingBox(request.selectedText, request.mode, request.tabUrl);
-		sendResponse({status: 'success'});
+		sendResponse({ status: 'success' });
 	}
 });
 
-  	// function anonymizeText(progress1, progress2, text) {console.log(progress1, progress2, text);}
-	async function anonymizeText(progress1, progress2, inputText) {
-		const resourceName = "shuningz";
-		const apiKey = "02427719893b42868f349a4668288963";
-		const deploymentId = "gpt-4o";
+// function anonymizeText(progress1, progress2, text) {console.log(progress1, progress2, text);}
+async function anonymizeText(progress1, progress2, inputText) {
+	const resourceName = "shuningz";
+	const apiKey = "02427719893b42868f349a4668288963";
+	const deploymentId = "gpt-4o";
 
-		const information_classes = `
+	const information_classes = `
 Name: the name of some person.
 Birthday: the birthday of some person.
 Age: number of years lived.
@@ -523,19 +592,19 @@ Common Languages: languages spoken.
 Past or Current Educational Majors: field of study.
 `;
 
-    const classes = information_classes.split('\n').map(line => line.split(': ')[0]);
-    for (let i = 0; i < classes.length; i++) {
-        classes[i] = classes[i].toLowerCase()
-    }
+	const classes = information_classes.split('\n').map(line => line.split(': ')[0]);
+	for (let i = 0; i < classes.length; i++) {
+		classes[i] = classes[i].toLowerCase()
+	}
 
-    const class_info = [[4.0, 0.43], [3.69, 0.43], [3.73, 2.29], [3.27, 2.57], [2.54, 1.14], [2.81, 2.86], [3.62, 0.43], [3.62, 1.71], [4.54, 1.14], [5.92, 0.0], [5.54, 0.43], [4.54, 0.0], [3.69, 2.14], [6.23, 0.0], [6.0, 0.0], [5.5, 0.0], [5.65, 0.0], [4.54, 0.29], [4.46, 0.14], [5.15, 0.29], [5.19, 0.14], [3.08, 0.86], [5.19, 1.14], [3.46, 0.43], [3.46, 0.29], [3.54, 0.14], [5.15, 1.14], [5.23, 1.14], [5.38, 1.57], [5.38, 1.14], [5.15, 1.0], [4.15, 2.86], [4.15, 2.43], [4.65, 3.43], [4.04, 0.71], [4.58, 4.29], [4.42, 3.29], [5.35, 1.14], [5.35, 1.0], [4.96, 2.71], [4.85, 0.43], [5.04, 3.0], [6.04, 0.14], [6.04, 0.14], [5.96, 0.0], [5.62, 0.57], [5.12, 0.43], [5.38, 0.43], [5.69, 0.71], [6.04, 0.57], [6.12, 0.43], [5.38, 0.43], [5.04, 0.43], [4.77, 0.57], [5.77, 0.29], [5.65, 0.29], [5.85, 0.29], [5.77, 0.29], [5.85, 0.29], [6.15, 0.57], [6.38, 0.0], [6.35, 0.0], [6.35, 0.0], [6.35, 0.0], [6.0, 0.0], [5.85, 0.0], [5.62, 0.0], [5.42, 0.43], [5.15, 0.57], [4.88, 0.0], [5.5, 0.71], [5.46, 0.71], [5.35, 1.0], [5.27, 0.29], [5.58, 0.29], [5.31, 0.29], [4.85, 0.29], [4.85, 0.29], [5.73, 0.71], [5.27, 0.57], [5.31, 0.71], [5.77, 0.86], [5.62, 1.14], [4.88, 1.0], [4.54, 1.71], [5.35, 1.57], [5.31, 1.57], [3.96, 0.57], [3.88, 0.43], [4.42, 0.29], [5.58, 0.14], [4.96, 0.0], [3.38, 0.14], [3.0, 0.14], [3.0, 0.57], [2.92, 0.71], [2.92, 0.86], [3.12, 0.29], [3.92, 0.86], [4.08, 1.0], [3.42, 1.86], [5.15, 1.29], [2.58, 4.29], [3.15, 3.43]];
+	const class_info = [[4.0, 0.43], [3.69, 0.43], [3.73, 2.29], [3.27, 2.57], [2.54, 1.14], [2.81, 2.86], [3.62, 0.43], [3.62, 1.71], [4.54, 1.14], [5.92, 0.0], [5.54, 0.43], [4.54, 0.0], [3.69, 2.14], [6.23, 0.0], [6.0, 0.0], [5.5, 0.0], [5.65, 0.0], [4.54, 0.29], [4.46, 0.14], [5.15, 0.29], [5.19, 0.14], [3.08, 0.86], [5.19, 1.14], [3.46, 0.43], [3.46, 0.29], [3.54, 0.14], [5.15, 1.14], [5.23, 1.14], [5.38, 1.57], [5.38, 1.14], [5.15, 1.0], [4.15, 2.86], [4.15, 2.43], [4.65, 3.43], [4.04, 0.71], [4.58, 4.29], [4.42, 3.29], [5.35, 1.14], [5.35, 1.0], [4.96, 2.71], [4.85, 0.43], [5.04, 3.0], [6.04, 0.14], [6.04, 0.14], [5.96, 0.0], [5.62, 0.57], [5.12, 0.43], [5.38, 0.43], [5.69, 0.71], [6.04, 0.57], [6.12, 0.43], [5.38, 0.43], [5.04, 0.43], [4.77, 0.57], [5.77, 0.29], [5.65, 0.29], [5.85, 0.29], [5.77, 0.29], [5.85, 0.29], [6.15, 0.57], [6.38, 0.0], [6.35, 0.0], [6.35, 0.0], [6.35, 0.0], [6.0, 0.0], [5.85, 0.0], [5.62, 0.0], [5.42, 0.43], [5.15, 0.57], [4.88, 0.0], [5.5, 0.71], [5.46, 0.71], [5.35, 1.0], [5.27, 0.29], [5.58, 0.29], [5.31, 0.29], [4.85, 0.29], [4.85, 0.29], [5.73, 0.71], [5.27, 0.57], [5.31, 0.71], [5.77, 0.86], [5.62, 1.14], [4.88, 1.0], [4.54, 1.71], [5.35, 1.57], [5.31, 1.57], [3.96, 0.57], [3.88, 0.43], [4.42, 0.29], [5.58, 0.14], [4.96, 0.0], [3.38, 0.14], [3.0, 0.14], [3.0, 0.57], [2.92, 0.71], [2.92, 0.86], [3.12, 0.29], [3.92, 0.86], [4.08, 1.0], [3.42, 1.86], [5.15, 1.29], [2.58, 4.29], [3.15, 3.43]];
 
-    const prompt_anonymization = `Please act as an expert adn analyze the private information in the below paragraph. I'll give you an example first. The information class MUST be selected from the given list.
+	const prompt_anonymization = `Please act as an expert adn analyze the private information in the below paragraph. I'll give you an example first. The information class MUST be selected from the given list.
 
     [Information Classes]
     ` + information_classes;
 
-    const example = `[Example]
+	const example = `[Example]
 [Example input]
 John Doe, born on January 1, 1980, is a 44-year-old Caucasian male from New York, USA. He holds American nationality and currently resides at 1234 Elm Street, Springfield, IL, 62704. John is married to Jane Doe, and they have two children, Alice and Bob Doe. He enjoys reading, hiking, and photography in his free time.
 
@@ -573,66 +642,65 @@ John identifies as (heterosexual)[Sexual Orientation], has been (married since 2
 [Real Input]
 `;
 
-    const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
+	const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
 
-    const client = new OpenAIClient(
-        `https://${resourceName}.openai.azure.com/`,
-        new AzureKeyCredential(apiKey)
-    );
+	const client = new OpenAIClient(
+		`https://${resourceName}.openai.azure.com/`,
+		new AzureKeyCredential(apiKey)
+	);
 
-    // const {choices} = await client.getChatCompletions(deploymentId, [`${prompt_anonymization}${example}${text}`]);
-    const messages = [{ role: "user", content: `${prompt_anonymization}${example}${inputText}` }];
-    try {
-        const result = await client.getChatCompletions(deploymentId, messages);
-        if (!result.choices || result.choices.length === 0) {
-            throw new Error('No completion returned');
-        }
-        console.log(`Chatbot: ${result.choices[0].message?.content}`);
-        const textResult = result.choices[0].message?.content;
-        // Extract sensitive information from the response
-        const pattern = /\((.*?)\)\[(.*?)\]/g;
-        let match;
-        const results = [];
-        while ((match = pattern.exec(textResult)) !== null) {
-            const value = match[1];
-            const type = match[2];
+	// const {choices} = await client.getChatCompletions(deploymentId, [`${prompt_anonymization}${example}${text}`]);
+	const messages = [{ role: "user", content: `${prompt_anonymization}${example}${inputText}` }];
+	try {
+		const result = await client.getChatCompletions(deploymentId, messages);
+		if (!result.choices || result.choices.length === 0) {
+			throw new Error('No completion returned');
+		}
+		console.log(`Chatbot: ${result.choices[0].message?.content}`);
+		const textResult = result.choices[0].message?.content;
+		// Extract sensitive information from the response
+		const pattern = /\((.*?)\)\[(.*?)\]/g;
+		let match;
+		const results = [];
+		while ((match = pattern.exec(textResult)) !== null) {
+			const value = match[1];
+			const type = match[2];
 
-            // 验证匹配项是否符合预期格式
-            if (value && type) {
-                results.push({
-                    value: value,
-                    type: type
-                });
-            } else {
-                console.warn(`Skipping invalid match: ${match[0]}`);
-            }
-        }
+			// 验证匹配项是否符合预期格式
+			if (value && type) {
+				results.push({
+					value: value,
+					type: type
+				});
+			} else {
+				console.warn(`Skipping invalid match: ${match[0]}`);
+			}
+		}
 
-        const pt = pseudonymizeText(inputText, results, classes, class_info, progress1, progress2);
-        console.log('Pseudonymized text:', pt);
-        console.log(inputText);
-        console.log(results);
-        return pt;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-  }
+		const pt = pseudonymizeText(inputText, results, classes, class_info, progress1, progress2);
+		console.log('Pseudonymized text:', pt);
+		console.log(inputText);
+		console.log(results);
+		return pt;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
 
-  function pseudonymizeText(text, sensitiveInfo, classes, class_info, progress1, progress2) {
+function pseudonymizeText(text, sensitiveInfo, classes, class_info, progress1, progress2) {
 
 	sensitiveInfo.forEach(info => {
-        const type = info.type.toLowerCase();
+		const type = info.type.toLowerCase();
 		if (classes.includes(type)) {
-            const index = classes.indexOf(type);
-            const [priv, util] = class_info[index];
-            console.log(priv, util);
-            if (priv * 100 > progress1 * 7 && util * 100 < progress2 * 7) {
-                const replacement = `[${info.type}]`;
-                text = text.replace(new RegExp(info.value, 'g'), replacement);
-            }
+			const index = classes.indexOf(type);
+			const [priv, util] = class_info[index];
+			console.log(priv, util);
+			if (priv * 100 > progress1 * 7 && util * 100 < progress2 * 7) {
+				const replacement = `[${info.type}]`;
+				text = text.replace(new RegExp(info.value, 'g'), replacement);
+			}
 		}
 	});
 	return text;
-  }
-  
+}
