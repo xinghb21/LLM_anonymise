@@ -87,14 +87,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
     }
     if (message.type === 'AddLog') {
-        const url = 'http://127.0.0.1:5001/write_to_file';
-        let params = new URLSearchParams({ data: message.data });
+        const url = "http://127.0.0.1:5001/write_to_file";
+        const data = { raw: message.raw, processed: message.processed, last: message.last };
 
-        fetch(`${url}?${params.toString()}`, {
+        fetch(url, {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Origin': message.origin,
-            }
+            },
+            body: JSON.stringify(data)
         })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     }
 });

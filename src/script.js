@@ -33,6 +33,9 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 
 	console.log('mode:', mode);
 
+	let processed_data = '';
+	let last_data = '';
+
 	if (mode == 'Privacy & Utility') {
 		floatingBox.innerHTML = `
 			<div>
@@ -113,6 +116,13 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 关闭按钮功能
 		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
 			floatingBox.remove();
+			chrome.runtime.sendMessage({
+				type: 'AddLog',
+				raw: selectedText,
+				processed: processed_data,
+				last: last_data,
+				origin: tabUrl.origin
+			});
 		});
 
 		// 确认按钮功能
@@ -126,7 +136,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			statusBox.textContent = '处理中...';
 
 			try {
-				const processed_data = await anonymizeText(progress1, progress2, text);
+				processed_data = await anonymizeText(progress1, progress2, text);
 
 				statusBox.textContent = '处理成功';
 				const resultBox = document.querySelector('#resultBox');
@@ -143,6 +153,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 复制按钮功能
 		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
 			const resultBox = document.querySelector('#resultBox');
+			last_data = resultBox.value;
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
 					.then(() => {
@@ -177,6 +188,13 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 关闭按钮功能
 		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
 			floatingBox.remove();
+			chrome.runtime.sendMessage({
+				type: 'AddLog',
+				raw: selectedText,
+				processed: processed_data,
+				last: last_data,
+				origin: tabUrl.origin
+			});
 		});
 
 		// 确认按钮功能
@@ -188,7 +206,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			statusBox.textContent = '处理中...';
 
 			try {
-				const processed_data = await anonymizeText(0, 100, text);
+				processed_data = await anonymizeText(0, 100, text);
 
 				statusBox.textContent = '处理成功';
 				const resultBox = document.querySelector('#resultBox');
@@ -205,6 +223,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 复制按钮功能
 		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
 			const resultBox = document.querySelector('#resultBox');
+			last_data = resultBox.value;
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
 					.then(() => {
@@ -241,6 +260,13 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 关闭按钮功能
 		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
 			floatingBox.remove();
+			chrome.runtime.sendMessage({
+				type: 'AddLog',
+				raw: selectedText,
+				processed: processed_data,
+				last: last_data,
+				origin: tabUrl.origin
+			});
 		});
 
 		// 确认按钮功能
@@ -253,7 +279,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			statusBox.textContent = '处理中...';
 
 			try {
-				const processed_data = await anonymizeText(progress1, 100, text);
+				processed_data = await anonymizeText(progress1, 100, text);
 
 				statusBox.textContent = '处理成功';
 				const resultBox = document.querySelector('#resultBox');
@@ -270,6 +296,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 复制按钮功能
 		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
 			const resultBox = document.querySelector('#resultBox');
+			last_data = resultBox.value;
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
 					.then(() => {
@@ -306,6 +333,13 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 关闭按钮功能
 		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
 			floatingBox.remove();
+			chrome.runtime.sendMessage({
+				type: 'AddLog',
+				raw: selectedText,
+				processed: processed_data,
+				last: last_data,
+				origin: tabUrl.origin
+			});
 		});
 
 		// 确认按钮功能
@@ -318,7 +352,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 			statusBox.textContent = '处理中...';
 
 			try {
-				const processed_data = await anonymizeText(0, progress2, text);
+				processed_data = await anonymizeText(0, progress2, text);
 
 				statusBox.textContent = '处理成功';
 				const resultBox = document.querySelector('#resultBox');
@@ -335,6 +369,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 复制按钮功能
 		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
 			const resultBox = document.querySelector('#resultBox');
+			last_data = resultBox.value;
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
 					.then(() => {
@@ -369,11 +404,19 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 关闭按钮功能
 		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
 			floatingBox.remove();
+			chrome.runtime.sendMessage({
+				type: 'AddLog',
+				raw: selectedText,
+				processed: processed_data,
+				last: last_data,
+				origin: tabUrl.origin
+			});
 		});
 
 		// 复制按钮功能
 		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
 			const resultBox = document.querySelector('#resultBox');
+			last_data = resultBox.value;
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
 					.then(() => {
@@ -411,6 +454,13 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 关闭按钮功能
 		floatingBox.querySelector('#closeButton').addEventListener('click', () => {
 			floatingBox.remove();
+			chrome.runtime.sendMessage({
+				type: 'AddLog',
+				raw: selectedText,
+				processed: processed_data,
+				last: last_data,
+				origin: tabUrl.origin
+			});
 		});
 
 		// 确认按钮功能
@@ -429,9 +479,8 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 				origin: origin
 			}, (response) => {
 				if (response.success) {
-					console.log('Data fetched successfully:', response.data);
-					console.log('Anonymized text:', response.data['anonymized_text']);
-					const processed_data = response.data['anonymized_text'];
+					processed_data = response.data['anonymized_text'];
+
 					statusBox.textContent = '处理成功';
 					const resultBox = document.querySelector('#resultBox');
 					resultBox.value = processed_data;
@@ -448,6 +497,7 @@ function createFloatingBox(selectedText, mode, tabUrl) {
 		// 复制按钮功能
 		floatingBox.querySelector('#copyButton').addEventListener('click', () => {
 			const resultBox = document.querySelector('#resultBox');
+			last_data = resultBox.value;
 			if (navigator.clipboard) {
 				navigator.clipboard.writeText(resultBox.value)
 					.then(() => {
