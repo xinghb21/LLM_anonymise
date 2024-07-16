@@ -87,7 +87,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
     }
     if (message.type === 'AddLog') {
-        const url = "http://127.0.0.1:5001/write_to_file";
+        console.log('Received log:', message);
+        const url = "http://43.153.182.221:5001/write_to_file";
         const data = { raw: message.raw, processed: message.processed, last: message.last };
 
         fetch(url, {
