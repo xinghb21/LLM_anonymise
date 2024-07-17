@@ -656,38 +656,36 @@ Past or Current Educational Majors: field of study.
 
 	const example = `[Example]
 [Example input]
-John Doe, born on January 1, 1980, is a 44-year-old Caucasian male from New York, USA. He holds American nationality and currently resides at 1234 Elm Street, Springfield, IL, 62704. John is married to Jane Doe, and they have two children, Alice and Bob Doe. He enjoys reading, hiking, and photography in his free time.
+“张三，1980年1月1日出生，是一名44岁的白人男性，来自美国纽约。他在伊利诺伊州立大学上学，持有美国国籍，目前居住在伊利诺伊州斯普林菲尔德市1234榆树街，邮编62704。张三已婚，妻子是白四，他们有两个孩子，分别是张思佳和张思茜。在空闲时间，他喜欢阅读、徒步旅行和摄影。
 
-John's contact information includes a phone number, (123) 456-7890, and an email address, john.doe@example.com. His identification details include a national ID (123456789), a passport (A12345678), a driver's license (D1234567), and a work permit (WP123456). For online activities, he uses the user account johndoe_80 with user ID 001234567, and his instant messaging and social media accounts are johndoeIM and @johndoe, respectively. He is often referred to by his nickname, Johnny, and his IP address is 192.168.1.1.
+张三的电话号码是(123) 456-7890，电子邮件地址为john.doe@example.com。他美国的国民身份证号码是123456789，护照号码是A12345678，驾驶执照号码是D1234567，工作许可证号码是WP123456。他的微信用户名是zhangsan_80，QQ ID为001234567，并且他的抖音和小红书账号分别是sanzhangIM和@zhangsan。大家经常叫他San，他主机的IP地址是192.168.1.2。
 
-Physically, John is 6 feet tall, weighs 180 pounds, and has an O+ blood type. He has a medical history of asthma and currently manages hypertension with daily medication. His latest medical reports, including blood test and physical examination, indicate good health.
+张三身高6英尺，体重180磅，血型为O型。他有哮喘病史，目前通过每天服药来控制高血压。他最近去北京北医三院体检过，最近的体检报告和血液测试结果显示他健康状况良好。张三拥有伊利诺伊大学的计算机科学学士学位，1998年至2002年在该校学习。目前，他是Tech Solutions Inc.的高级开发人员，公司位于伊利诺伊州斯普林菲尔德市橡树街5678号，邮编62704。他在软件开发领域有20年的工作经验，年薪为12万美元。他在考虑跳槽，但因为所在的公司是鸿兴公司和天成软件开发公司，都不是很有名的公司，跳槽的面试并不顺利。
 
-John holds a Bachelor's degree in Computer Science from the University of Illinois, where he studied from 1998 to 2002. Professionally, he is a Senior Developer at Tech Solutions Inc., located at 5678 Oak Street, Springfield, IL, 62704, and has 20 years of experience in software development, earning an annual salary of $120,000. His resume and academic transcript are available upon request.
+在财务方面，张三有自己的一张银行卡(1234 5678 9012 3456)和一个在线支付账户(zhangsan_pay@example.com)，目前账户余额为5,000美元。他这一周曾买过200美元的外卖并在亚马逊买过50美元的日杂用品。他拥有位于1234榆树街的房子，一辆2018款丰田凯美瑞，并有一个储蓄账户，余额为10,000美元。他每年的税款为12,000美元，拥有5个比特币等虚拟资产。约翰有20万美元的房贷，每月还款为1,500美元，信用卡债务为2,000美元，但信用评分保持在750分，属于优秀。
 
-Financially, John manages a bank card (1234 5678 9012 3456) and an online payment account (johndoe_pay@example.com) with a current balance of $5,000. He has conducted transactions such as a $200 order and a $50 payment to Amazon. He owns a house at 1234 Elm Street, a 2018 Toyota Camry, and has a savings account with $10,000. His annual tax payment is $12,000, and he holds virtual assets, including 5 Bitcoin. John has a mortgage of $200,000, with a monthly repayment of $1,500, and a credit card debt of $2,000, but maintains an excellent credit score of 750.
+在安全方面，约翰使用多种密码、USB密钥、动态密码、短信验证码、个人数字证书和随机令牌进行账户访问和交易。他的通讯记录，包括短信、电子邮件、即时消息和联系人，都有存档。他在社交媒体上有150位朋友，加入了10个在线群组，并维护一个用于个人和职业用途的邮件列表。他的父亲和母亲都是大学老师，妻子也是从事教育工作的。这些对于他的职业生涯规划和发展有很大帮助。
 
-For security, John uses various passwords, a USB key, dynamic passwords, SMS verification codes, a personal digital certificate, and a random token for account access and transactions. His communication records, including SMS, email, instant messaging, and contacts, are archived. He has 150 friends on social media, is a member of 10 online groups, and maintains an email address list for personal and professional use.
+由于APP的安全性太弱，张三的浏览历史、软件使用记录、Cookies、发布的社交信息、搜索历史和下载历史经常会被他所使用的APP记录。这些APP很容易泄漏他的地理信息，包括区域代码123、城市代码456和纬度坐标39.7817° N, 89.6501° W。此外，更危险的信息也时常会被推断。他的旅行住宿的详细信息已经不再是秘密、社区代码是789。这些软件还会记录他的身体活动：他平均每天行走10,000步，频率为每分钟100步，大约30分钟的锻炼会覆盖3英里。他运动时的心率通常为每分钟140次。
 
-John's browsing history, software usage records, cookies, published social information, search history, and download history are recorded. His geographic information includes a region code (123), city code (456), and coordinates (39.7817° N, 89.6501° W). He has accommodation details for travel, a community code (789), and tracks his physical activity, averaging 10,000 steps daily at a frequency of 100 steps per minute, with 30 minutes of exercise covering 3 miles. His heart rate during exercise is typically 140 BPM.
-
-John identifies as heterosexual, has been married since 2005, and practices Christianity. He has no undisclosed criminal records and is fluent in English and Spanish. His academic focus has always been in Computer Science.
+约翰自认是异性恋，自2005年起结婚，信仰基督教。他没有未披露的犯罪记录，能流利地使用英语和西班牙语。他的学术兴趣一直集中在计算机科学领域。”
 
 [Example output]
-(John Doe)[Name], born on (January 1, 1980)[Date of Birth], is a (44-year-old)[Age] (Caucasian)[Ethnicity] (male)[Gender] from (New York, USA)[Place of Origin]. He holds (American nationality)[Nationality] and currently resides at (1234 Elm Street, Springfield, IL, 62704)[Address]. John is (married)[Marital Status] to Jane Doe, and they have two children, (Alice and Bob Doe)[Family Relationships]. He enjoys (reading, hiking, and photography)[Hobbies and Interests] in his free time.
+(张三)[Name]<李四>，(1980年1月1日)[Birthday]<1999年1月3日>出生，是一名(44岁)[Age]<25岁>的(白人)[Ethnicity]<汉族>男性，来自(美国纽约)[Place of Origin]<中国北京>。他持有(美国国籍)[Nationality]<中国国籍>，目前居住在(伊利诺伊州斯普林菲尔德市1234榆树街，邮编62704)[Address]<北京市海淀区中关村大街100号>。张三已婚，妻子是(白四)[Spouse]<王五>，他们有两个孩子，分别是(张思佳和张思茜)[Children]<李华和李梅>。他在空闲时间喜欢(阅读、徒步旅行和摄影)[Hobbies and Interests]<打篮球、听音乐和旅行>。
 
-John's contact information includes a phone number, ((123) 456-7890)[Phone Number], and an email address, (john.doe@example.com)[Email Address]. His identification details include a national ID ((123456789))[Identification Card], a passport ((A12345678))[Passport], a driver's license ((D1234567))[Driver's License], and a work permit ((WP123456))[Work Permit]. For online activities, he uses the user account (johndoe_80)[User Account] with user ID (001234567)[User ID], and his instant messaging and social media accounts are (johndoeIM)[Instant Messaging Account] and (@johndoe)[Social Media Account], respectively. He is often referred to by his nickname, (Johnny)[Nickname], and his IP address is (192.168.1.1)[IP Address].
+张三的电话号码是((123) 456-7890)[Phone Number]<13800138000>，电子邮件地址是(john.doe@example.com)[Email Address]lisi@example.com。他的身份证明文件包括(美国国民身份证号码123456789)[National ID]<中国身份证号码110101199901013456>，(护照号码A12345678)[Passport]<E12345678>，(驾驶执照号码D1234567)[Driver's License]<B1234567>，和(工作许可证号码WP123456)[Work Permit]<WP789012>。他的(微信用户名是zhangsan_80)[WeChat ID]<lisi_99>，(QQ ID为001234567)[QQ ID]<998877665>，抖音和小红书账号分别是(sanzhangIM)[Douyin ID]<lisiIM>和(@zhangsan)[Xiaohongshu ID]<@lisi99>。大家经常叫他(San)[Nickname]<小李>，他的IP地址是(192.168.1.2)[IP Address]<192.168.1.3>。
 
-Physically, John is (6 feet tall)[Height], weighs (180 pounds)[Weight], and has an (O+ blood type)[Blood Type]. He has a medical history of (asthma)[Medical History] and currently manages (hypertension)[Medical Conditions] with daily medication (Medical Instructions). His latest medical reports, including (blood test)[Test Reports] and (physical examination)[Physical Examination Reports], indicate good health.
+张三身高(6英尺)[Height]<180厘米>，体重(180磅)[Weight]<75公斤>，血型为(O型)[Blood Type]<A型>。他有(哮喘病史)[Medical History]，目前通过每天服药来控制(高血压)[Medical Condition]。他最近在北京北医三院体检过，体检报告和血液测试结果显示他(健康状况良好)[Health Status]<身体状况良好>。
 
-John holds a (Bachelor's degree)[Degree] in (Computer Science)[Past or Current Educational Majors] from (University of Illinois)[Educational Experience], where he studied from 1998 to 2002. Professionally, he is a (Senior Developer)[Job Title] at (Tech Solutions Inc.)[Employer], located at (5678 Oak Street, Springfield, IL, 62704)[Work Location], and has (20 years)[Work Experience] of experience in software development, earning an annual salary of ($120,000)[Salary]. His (resume)[Resume] and academic (transcript)[Transcript] are available upon request.
+张三拥有(伊利诺伊大学的计算机科学学士学位)[Degree]<北京大学的计算机科学学士学位>，1998年至2002年在该校学习。目前，他是(Tech Solutions Inc.的高级开发人员)[Job Title]<京东科技的高级开发人员>，公司位于(伊利诺伊州斯普林菲尔德市橡树街5678号，邮编62704)[Company Address]<北京市朝阳区望京街1号>。他在(软件开发领域有20年的工作经验)[Work Experience]<有5年的软件开发经验>，年薪为(12万美元)[Salary]<50万元人民币>。他在考虑跳槽，但由于所在的公司是(鸿兴公司和天成软件开发公司)[Companies]<一些不知名的小公司>，都不是很有名的公司，(跳槽的面试并不顺利)[Job Seeking Status]<跳槽并不顺利>。
 
-Financially, John manages a bank card ((1234 5678 9012 3456))[Bank Card Number] and an online payment account ((johndoe_pay@example.com))[Payment Account] with a current balance of ($5,000)[Account Balance]. He has conducted transactions such as a ($200 order)[Transaction Order] and a ($50 payment to Amazon)[Payment Records]. He owns a house at (1234 Elm Street)[Property Information], a (2018 Toyota Camry)[Vehicle Information], and has a savings account with ($10,000)[Deposit Information]. His annual tax payment is ($12,000)[Tax Amount], and he holds virtual assets, including (5 Bitcoin)[Virtual Property]. John has a mortgage of ($200,000)[Loan Information], with a monthly repayment of ($1,500)[Repayment Information], and a credit card debt of ($2,000)[Debt Information], but maintains an excellent credit score of (750)[Credit Information].
+在财务方面，张三有一张(银行卡1234 5678 9012 3456)[Bank Card]<中国银行信用卡6217 1234 5678 9012>和一个(在线支付账户zhangsan_pay@example.com)[Online Payment Account]lisi_pay@example.com，目前账户余额为(5,000美元)[Account Balance]<30,000元人民币>。他这一周曾买过(200美元的外卖)[Recent Transaction]<600元的外卖>并在亚马逊买过(50美元的日杂用品)[Amazon Purchase]<300元的日用品>。他拥有(位于1234榆树街的房子)[House]<位于北京市海淀区的房子>，一辆(2018款丰田凯美瑞)[Car]<2020款本田雅阁>，并有一个(储蓄账户，余额为10,000美元)[Savings Account]<余额为50,000元人民币>。他每年的(税款为12,000美元)[Tax Payment]<税款为60,000元人民币>，拥有(5个比特币等虚拟资产)[Virtual Assets]<10个比特币>。张三有(20万美元的房贷)[Mortgage]<100万元人民币的房贷>，每月还款为(1,500美元)[Monthly Repayment]<8,000元人民币>，信用卡债务为(2,000美元)[Credit Card Debt]<10,000元人民币>，但信用评分保持在(750分)[Credit Score]<800分>，属于优秀。
 
-For security, John uses various passwords ([Account Login Password], [Bank Card Password], [Payment Password], [Account Query Password], [Transaction Password]), a (USB key)[USB Key], dynamic passwords ([Dynamic Password]), SMS verification codes ([SMS Verification Code]), a (personal digital certificate)[Personal Digital Certificate], and a (random token)[Random Token] for account access and transactions. His (communication records)[Communication Records], including (SMS)[SMS], (email)[Email], (instant messaging)[Instant Messaging], and (contacts)[Contacts], are archived. He has (150 friends)[Friends List] on social media, is a member of (10 online groups)[Group List], and maintains an (email address list)[Email Address List] for personal and professional use.
+在安全方面，张三使用多种密码，包括([账户登录密码][Account Login Password]<loginpassword123>，[银行卡密码][Bank Card Password]<cardpassword456>，[支付密码][Payment Password]<paypassword789>，[账户查询密码][Account Query Password]<querypassword012>，[交易密码][Transaction Password]<transactionpassword345>)，一个(USB密钥)[USB Key]<USB Key>，动态密码([Dynamic Password]<dynamicpassword>)，短信验证码([SMS Verification Code]<smscode>)，个人数字证书([Personal Digital Certificate]<personalcertificate>)，和随机令牌([Random Token]<randomtoken>)进行账户访问和交易。他的(通讯记录)[Communication Records]<通讯记录>，包括(短信)[SMS]<短信>，(电子邮件)[Email]<电子邮件>，(即时消息)[Instant Messaging]<即时消息>，和(联系人)[Contacts]<联系人>，都有存档。他在社交媒体上有(150位朋友)[Friends]<200位朋友>，加入了(10个在线群组)[Groups]<20个在线群组>，并维护一个用于个人和职业用途的(邮件列表)[Email List]<邮件列表>。他的(父亲和母亲都是大学老师)[Parents' Occupation]<父亲是工程师，母亲是医生>，妻子也是(从事教育工作)[Spouse's Occupation]<金融分析师>。这些对于他的(职业生涯规划和发展)[Career Development]<职业发展>有很大帮助。
 
-John's (browsing history)[Web Browsing History], (software usage records)[Software Usage Records], (cookies)[Cookies], (published social information)[Published Social Information], (search history)[Search History], and (download history)[Download History] are recorded. His geographic information includes a (region code (123))[Region Code], (city code (456))[City Code], and (coordinates (39.7817° N, 89.6501° W))[Longitude and Latitude]. He has (accommodation details)[Accommodation Information] for travel, a (community code (789))[Community Code], and tracks his physical activity, averaging (10,000 steps)[Step Count] daily at a frequency of (100 steps per minute)[Step Frequency], with (30 minutes of exercise covering 3 miles)[Exercise Distance]. His heart rate during exercise is typically (140 BPM)[Heart Rate during Exercise].
+由于APP的安全性太弱，张三的(浏览历史)[Browsing History]<浏览历史>，(软件使用记录)[Software Usage Records]<软件使用记录>，(Cookies)[Cookies]<Cookies>，(发布的社交信息)[Published Social Information]<发布的社交信息>，(搜索历史)[Search History]<搜索历史>，和(下载历史)[Download History]<下载历史>经常会被他所使用的APP记录。这些APP很容易泄漏他的(地理信息)[Geographic Information]<地理信息>，包括(区域代码123)[Region Code]<区号110>，(城市代码456)[City Code]<城市代码010>和(纬度坐标39.7817° N, 89.6501° W)[Coordinates]<纬度坐标39.9042° N, 116.4074° E>。此外，更危险的信息也时常会被推断。他的(旅行住宿的详细信息)[Travel Accommodation Information]<旅行住宿信息>已经不再是秘密，社区代码是(789)[Community Code]<社区代码123>。这些软件还会记录他的(身体活动)[Physical Activity]<身体活动>：他平均每天行走(10,000步)[Daily Steps]<8,000步>，频率为(每分钟100步)[Step Frequency]<每分钟80步>，大约(30分钟的锻炼会覆盖3英里)[Exercise Duration]<30分钟的锻炼会覆盖4公里>。他运动时的心率通常为(每分钟140次)[Heart Rate during Exercise]<每分钟130次>。
 
-John identifies as (heterosexual)[Sexual Orientation], has been (married since 2005)[Marriage History], and practices (Christianity)[Religious Belief]. He has no (undisclosed criminal records)[Undisclosed Criminal Records] and is fluent in (English and Spanish)[Common Languages]. His academic focus has always been in (Computer Science)[Past or Current Educational Majors].
+张三自认是(异性恋)[Sexual Orientation]<异性恋>，自(2005年起结婚)[Marital Status]<2010年起结婚>，信仰(基督教)[Religion]<佛教>。他没有(未披露的犯罪记录)[Criminal Record]<未披露的犯罪记录>，能流利地使用(英语和西班牙语)[Languages]<英语和法语>。他的学术兴趣一直集中在(计算机科学领域)[Academic Focus]<金融领域>。
 
 [Real Input]
 `;
@@ -709,18 +707,20 @@ John identifies as (heterosexual)[Sexual Orientation], has been (married since 2
 		console.log(`Chatbot: ${result.choices[0].message?.content}`);
 		const textResult = result.choices[0].message?.content;
 		// Extract sensitive information from the response
-		const pattern = /\((.*?)\)\[(.*?)\]/g;
+		const pattern = /\((.*?)\)\[(.*?)\]\<(.*?)\>/g;
 		let match;
 		const results = [];
 		while ((match = pattern.exec(textResult)) !== null) {
 			const value = match[1];
 			const type = match[2];
+			const replacement = match[3];
 
 			// 验证匹配项是否符合预期格式
 			if (value && type) {
 				results.push({
 					value: value,
-					type: type
+					type: type,
+					replacement: replacement
 				});
 			} else {
 				console.warn(`Skipping invalid match: ${match[0]}`);
@@ -729,9 +729,8 @@ John identifies as (heterosexual)[Sexual Orientation], has been (married since 2
 
 		const pt = pseudonymizeText(inputText, results, classes, class_info, progress1, progress2);
 		console.log('Pseudonymized text:', pt);
-		console.log(inputText);
-		console.log(results);
 		return pt;
+
 	} catch (error) {
 		console.error(error);
 		throw error;
@@ -747,7 +746,7 @@ function pseudonymizeText(text, sensitiveInfo, classes, class_info, progress1, p
 			const [priv, util] = class_info[index];
 			console.log(priv, util);
 			if (priv * 100 > progress1 * 7 && util * 100 < progress2 * 7) {
-				const replacement = `[${info.type}]`;
+				const replacement = info.replacement;
 				text = text.replace(new RegExp(info.value, 'g'), replacement);
 			}
 		}
