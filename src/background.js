@@ -90,16 +90,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log('Received log:', message);
         const url = "http://43.153.182.221:5001/write_to_file";
         const data = { raw: message.raw, processed: message.processed, last: message.last };
-
+    
         fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Origin': message.origin,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Success:', data);
         })
